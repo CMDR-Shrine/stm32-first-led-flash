@@ -2,7 +2,8 @@
 
 Fill these in from the official documentation. Include the document section or
 table beside each answer.
-
+- apbr2 bus thing address offset: 0x0C
+- RCC (reset and clock constrol) Boundary addr is: 0x4002 1000 - 0x4002 13FF
 - Exact MCU marking: **STM32F103CBT6**
 - Processor core: Arm® 32-bit Cortex®-M3 CPU core 
 - Instruction set used by this project: Thumb instruction set
