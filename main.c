@@ -22,7 +22,8 @@ int main(void)
         // kinda cray ik, but lets go
 
 
-        // just the RCC BASE Reset/clock controll at 7.3 in the manual
+        // just the RCC BASE Reset/clock controll at 7.3.1 ish in the manual
+        // https://www.st.com/resource/en/reference_manual/cd00171190-stm32f101-103-105-107-stm32f100-series-armbased-32bit-mcus-stmicroelectronics.pdf
         uint32_t RCC_BASE = 0x40021000;
         
         // AHB peripheral clock enable register 
@@ -36,5 +37,7 @@ int main(void)
         // tldr, we go to addr, it has a big value, we change a part of it = clock now on
         // now lets flip this bit..ch
         *reg = set_bit(*reg,4u);
+
+        
     }
 }
