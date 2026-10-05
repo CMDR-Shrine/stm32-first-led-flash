@@ -36,7 +36,7 @@ Do not drive the output high or low yet.
 
 ## Commands
 
-```sh
+```
 make
 make disasm
 ```

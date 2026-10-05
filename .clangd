@@ -1,0 +1,5 @@
+# Firmware uses the STM32 target; Lesson 00 exercises run on the host.
+If:
+  PathMatch: (main|startup)\.c
+CompileFlags:
+  Add: [--target=arm-none-eabi, -mcpu=cortex-m3, -mthumb, -std=c11, -ffreestanding, -Wall, -Wextra]
