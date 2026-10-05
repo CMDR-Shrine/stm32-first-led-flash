@@ -4,6 +4,8 @@
 
 uint32_t set_bit(uint32_t value, uint32_t bit)
 {
+    // using | or means we keep original value and update desired bit
+    // simply doing 1u << bit would erase all other values!
     value = value | (1u << bit);
 
     return value;
@@ -32,6 +34,11 @@ int main(void)
 
         // so it has a value is 32 bits long
         // we go to bit 4 in the value. we can change it!
+        // volatile is done a lot in hardware, it prevents C compiler from optomizing it away
+        // setting to 1 and then turing off looks useless to the C compiler
+        // but even though the value is not read, it is affecting the hardware clock
+        // it might see *reg = 1 ... *reg = 0 and then only keep *reg = 0
+        // clock is never turned on!! 
         volatile uint32_t *reg = (volatile uint32_t *) RCC_APB2ENR;
 
         // tldr, we go to addr, it has a big value, we change a part of it = clock now on
