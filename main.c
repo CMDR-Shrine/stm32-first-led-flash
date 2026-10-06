@@ -26,7 +26,7 @@ int main(void)
 {
     for (;;) {
         uint32_t RCC_BASE = 0x40021000;
-        uint32_t RCC_APB2ENR = RCC_BASE + 0x0C ;
+        uint32_t RCC_APB2ENR = RCC_BASE + 0x18;
         // so it has a value is 32 bits long
         // we go to bit 4 in the value. we can change it!
         // volatile is done a lot in hardware, it prevents C compiler from optomizing it away
@@ -54,12 +54,16 @@ int main(void)
         // to be treated as a pointer not an int. We cast from int to pointer
         volatile uint32_t *pc13_config_reg = (volatile uint32_t *) GPIOC_CRH;
         // then actually read the hardware register with *, and change its value to bla bla bla 0000 bla bla bla
-        *pc13_config_reg = replace_nibble(GPIOC_CRH,20u,0u);
+        *pc13_config_reg = replace_nibble(*pc13_config_reg,20u,0u);
 
-        // now config the cleared pc13_config_reg
-        *pc13_config_reg = replace_nibble(GPIOC_CRH,20u,0u);
-
-        
-        
+        // now config the cleared pc13_config_reg see table 20 of RM0008
+        // 2 u = 0010
+        // 00 = gpo push pull
+        // 10 = max speed 2mhz
+        // 0010 = 2u boom!
+        uint32_t PC13_CONFIG = 2u;
+        // actually we could just have made one call, replacing 0u with 2u
+        // the func clears the bits anyway! but dw
+        *pc13_config_reg = replace_nibble(*pc13_config_reg,20u,PC13_CONFIG);
     }
 }
