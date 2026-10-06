@@ -86,13 +86,51 @@ int main(void){
          * the GPIOx_BSRR register (x = A .. G)
         */
 
-        *gpio_bsrr_reg = 1u << 13;
+        uint32_t dot = 3;
+        uint32_t dot_count = 200000;
+        uint32_t dash_count = 400000;
+        uint32_t long_wait = 600000;
+        
+        delay(long_wait);
 
-        delay(100000);
+        
+        while (dot > 0) {
+            *gpio_bsrr_reg = 1u << 29;
+            delay(dot_count);
+            *gpio_bsrr_reg = 1u << 13;
+            delay(dot_count);
+            dot--;
+        }
+        delay(dash_count);
 
-        *gpio_bsrr_reg = 1u << 29;
 
-        delay(100000);
+        dot = 3;
+
+        while (dot > 0) {
+            delay(dash_count);
+            *gpio_bsrr_reg = 1u << 29;
+            delay(dash_count);
+            *gpio_bsrr_reg = 1u << 13;
+            dot--;
+        }
+        delay(dash_count);
+
+        dot = 3;
+
+        while (dot > 0) {
+            *gpio_bsrr_reg = 1u << 29;
+            delay(dot_count);
+            *gpio_bsrr_reg = 1u << 13;
+            delay(dot_count);
+            dot--;
+        }
+
+        delay(long_wait);
+
+
+
+
+ 
 
 
         
