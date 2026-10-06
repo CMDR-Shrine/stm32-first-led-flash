@@ -6,6 +6,17 @@ static void delay(volatile uint32_t count) {
     }
 }
 
+static void tripple_flash(volatile uint32_t *gpio_bsrr_reg, uint32_t cycle_count, uint32_t dot) {
+    uint32_t copy_dot = dot;
+
+    while (copy_dot > 0) {
+            *gpio_bsrr_reg = 1u << 29;
+            delay(cycle_count);
+            *gpio_bsrr_reg = 1u << 13;
+            delay(cycle_count);
+            copy_dot--;
+        }
+}
 
 uint32_t clear_bit(uint32_t value, uint32_t bit){ 
 
@@ -92,46 +103,12 @@ int main(void){
         uint32_t long_wait = 600000;
         
         delay(long_wait);
-
-        
-        while (dot > 0) {
-            *gpio_bsrr_reg = 1u << 29;
-            delay(dot_count);
-            *gpio_bsrr_reg = 1u << 13;
-            delay(dot_count);
-            dot--;
-        }
-        delay(dash_count);
-
-
-        dot = 3;
-
-        while (dot > 0) {
-            delay(dash_count);
-            *gpio_bsrr_reg = 1u << 29;
-            delay(dash_count);
-            *gpio_bsrr_reg = 1u << 13;
-            dot--;
-        }
-        delay(dash_count);
-
-        dot = 3;
-
-        while (dot > 0) {
-            *gpio_bsrr_reg = 1u << 29;
-            delay(dot_count);
-            *gpio_bsrr_reg = 1u << 13;
-            delay(dot_count);
-            dot--;
-        }
-
+        tripple_flash(gpio_bsrr_reg, dot_count, dot);
+        delay(dot_count);
+        tripple_flash(gpio_bsrr_reg, dash_count, dot );
+        delay(dot_count);
+        tripple_flash(gpio_bsrr_reg, dot_count, dot);
         delay(long_wait);
-
-
-
-
- 
-
 
         
     }
