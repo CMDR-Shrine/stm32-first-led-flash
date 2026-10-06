@@ -27,7 +27,9 @@ Edit only `main.c`, after the RCC write.
 3. Set only the bits required by the contract above.
 4. Leave the infinite loop in place.
 
-Do not drive the output high or low yet.
+Do not write the output-level registers yet. Configuring the pin as an output
+already enables its driver: it will drive the level stored in the output-data
+register (`GPIOx_ODR`). Configuration and output level are separate settings.
 
 ## Documentation
 
@@ -41,7 +43,14 @@ make
 make disasm
 ```
 
-Expected result: the build passes, but no visible LED behavior is promised yet.
+Expected result: the build passes. After flashing and reset, the LED may already
+light: `GPIOx_ODR` resets to zero, and enabling PC13's push-pull output makes it
+drive that low level. The board's LED is active-low. This is an effect of enabling
+the output driver, not evidence that we explicitly wrote an output level.
+
+Verify the configuration by reading `GPIOC_CRH` with the debugger. PC13's field
+must match your chosen configuration, and the other fields must match their
+values before your write. Lesson 04 will explicitly control the output level.
 
 Defence question: why must the code clear the four-bit field before setting the
 new value rather than only OR-ing in the desired bits?

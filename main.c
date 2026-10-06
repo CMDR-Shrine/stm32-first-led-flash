@@ -65,5 +65,23 @@ int main(void)
         // actually we could just have made one call, replacing 0u with 2u
         // the func clears the bits anyway! but dw
         *pc13_config_reg = replace_nibble(*pc13_config_reg,20u,PC13_CONFIG);
+
+        // now to toggle it on/off: we go to Port bit set/reset register at 0x10
+        // BS13, 13th bit, sets the ODR bit
+        // BR13 the 29th bit, resets ODR the bit
+        // port bit set/reset register below
+        uint32_t GPIOx_BSRR = START_PORT_C + 0x10;
+        volatile uint32_t *gpio_bsrr_reg = (volatile uint32_t *) GPIOx_BSRR;
+        // this turns it off!!!!
+        // brining up pc13 to 3.3 v while 3.3 v is at the other side == off!
+       *gpio_bsrr_reg = set_bit(*gpio_bsrr_reg, 13u); // turn off 
+
+//        *gpio_bsrr_reg = set_bit(*gpio_bsrr_reg, 29u); // turn on
+
+
+
+
+
+        
     }
 }

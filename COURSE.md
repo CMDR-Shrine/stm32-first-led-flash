@@ -12,7 +12,7 @@ be able to defend every register write and describe how execution reaches it.
 | 01 | `notes/01_machine.md` | Identify the chip, core, memories, and boot path | Built blank firmware and completed board facts |
 | 02 | `main.c` | Perform a deliberate memory-mapped register write | GPIOC clock enabled in code |
 | 03 | `main.c` | Configure PC13 as a push-pull output | Correct CRH bit field in the binary |
-| 04 | `main.c` | Drive an active-low output | PC13 LED stays on after flashing |
+| 04 | `main.c` | Explicitly control an active-low output | Verify LED off, then on, in separate flashes |
 | 05 | `main.c` | Create a visible state change over time | PC13 LED blinks continuously |
 | 06 | `notes/06_toolchain.md` | Trace C through object, ELF, and raw binary | Disassembly and section map explained |
 | 07 | `startup.c` | Explain reset, stack, vectors, `.data`, and `.bss` | Reset-to-`main` path defended |

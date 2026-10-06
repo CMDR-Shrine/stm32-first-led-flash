@@ -1,10 +1,15 @@
-# Lesson 04: Turn the LED On
+# Lesson 04: Explicitly Turn the LED Off and On
 
 ## Where We Are
 
-PC13 is an output, so the program can now produce its first visible effect. GPIO
-offers atomic bit-set and bit-reset registers, allowing one pin to change without
-a read-modify-write of the complete output register.
+PC13 is an output, and the LED may already be on because the output-data register
+resets to zero. This lesson makes the output level an explicit choice: first turn
+the LED off, verify that state, then change your program to turn it on.
+
+GPIO offers bit-set and bit-reset registers. Writing a one to a selected command
+bit changes the corresponding output-data bit; writing zero does nothing. These
+are atomic operations: the hardware changes the selected output without a
+separate read and write of the complete output-data register.
 
 The Blue Pill's onboard LED is active-low: current flows when PC13 is driven low.
 This is a property of the board wiring, not of GPIO in general.
@@ -13,10 +18,15 @@ This is a property of the board wiring, not of GPIO in general.
 
 Edit only `main.c`.
 
-1. Derive the GPIO bit-reset register address from the GPIO register map.
-2. Write a one at the position corresponding to pin 13.
-3. Keep the final infinite loop so the state remains observable.
-4. Build and flash the program.
+1. Keep Lesson 03's push-pull configuration. Find the GPIO bit-set register
+   (`GPIOx_BSRR`) address and the `BS13` field description in RM0008.
+2. After configuring PC13, write the command that sets its output-data bit to
+   one. Keep the infinite loop. Build and flash: the active-low LED should stay
+   off once initialization finishes. A brief flash during startup is possible.
+3. Explain why a high output turns this LED off before continuing.
+4. Find the GPIO bit-reset register (`GPIOx_BRR`) address and its pin-13 field.
+   Change the output command to drive PC13 low. Build and flash again: the LED
+   should remain on. Preserve your configuration and other learner code.
 
 Do not add a delay or blinking yet.
 
@@ -40,8 +50,9 @@ Submit on hardware:
 make flash
 ```
 
-Expected observation: the onboard PC13 LED remains steadily lit after the
-software reset.
+Expected observations: the first version explicitly leaves the PC13 LED off;
+the second explicitly leaves it on. These are two separate build/flash checks,
+not an automatic off/on sequence. No delay or timer is needed yet.
 
 Defence question: why does writing `1` to a reset-register bit drive the output
 low instead of storing the number one as the pin's output level?
