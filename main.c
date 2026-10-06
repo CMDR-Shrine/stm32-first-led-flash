@@ -1,19 +1,26 @@
 #include <stdint.h>
 
-uint32_t clear_bit(uint32_t value, uint32_t bit)
-{
+static void delay(volatile uint32_t count) {
+    while (count > 0) {
+        count--;
+    }
+}
+
+
+uint32_t clear_bit(uint32_t value, uint32_t bit){ 
+
     value = value & ~(1u << bit);
     return value ;
 }
 
-uint32_t set_bit(uint32_t value, uint32_t bit)
-{
+uint32_t set_bit(uint32_t value, uint32_t bit){ 
+
     value = value | (1u << bit);
     return value;
 }
 
-uint32_t replace_nibble(uint32_t value, uint32_t shift, uint32_t nibble)
-{
+uint32_t replace_nibble(uint32_t value, uint32_t shift, uint32_t nibble){ 
+
     // 15 in binary is 1111, make sense?
     // clears values in rage, leaves outer safe
     value = value & ~(15u << shift);
@@ -22,8 +29,8 @@ uint32_t replace_nibble(uint32_t value, uint32_t shift, uint32_t nibble)
 }
 
 
-int main(void)
-{
+int main(void){ 
+
     for (;;) {
         uint32_t RCC_BASE = 0x40021000;
         uint32_t RCC_APB2ENR = RCC_BASE + 0x18;
@@ -72,20 +79,20 @@ int main(void)
         // port bit set/reset register below
         uint32_t GPIOx_BSRR = START_PORT_C + 0x10;
         volatile uint32_t *gpio_bsrr_reg = (volatile uint32_t *) GPIOx_BSRR;
-        // this turns it off!!!!
-        // brining up pc13 to 3.3 v while 3.3 v is at the other side == off!
-        
-        // ok its evident i dont really understand how the bsrr register works
-        // apparently a bit flip there = a command to send to pc13
-        // but BSRR doesnt hold state its a *command input*??
-        // ODR is what remembers the resulting level
+
+        /* ###FROM THE DOCS### 
+         * Note: For atomic bit set/reset, the ODR bits can be individually set 
+         * and cleared by writing to 
+         * the GPIOx_BSRR register (x = A .. G)
+        */
+
         *gpio_bsrr_reg = 1u << 13;
-//        *gpio_bsrr_reg = 1u << 29;
 
-//        *gpio_bsrr_reg = set_bit(*gpio_bsrr_reg, 29u); // turn on
+        delay(100000);
 
+        *gpio_bsrr_reg = 1u << 29;
 
-
+        delay(100000);
 
 
         
