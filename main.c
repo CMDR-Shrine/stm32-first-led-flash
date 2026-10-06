@@ -74,7 +74,13 @@ int main(void)
         volatile uint32_t *gpio_bsrr_reg = (volatile uint32_t *) GPIOx_BSRR;
         // this turns it off!!!!
         // brining up pc13 to 3.3 v while 3.3 v is at the other side == off!
-       *gpio_bsrr_reg = set_bit(*gpio_bsrr_reg, 13u); // turn off 
+        
+        // ok its evident i dont really understand how the bsrr register works
+        // apparently a bit flip there = a command to send to pc13
+        // but BSRR doesnt hold state its a *command input*??
+        // ODR is what remembers the resulting level
+        *gpio_bsrr_reg = 1u << 13;
+//        *gpio_bsrr_reg = 1u << 29;
 
 //        *gpio_bsrr_reg = set_bit(*gpio_bsrr_reg, 29u); // turn on
 
